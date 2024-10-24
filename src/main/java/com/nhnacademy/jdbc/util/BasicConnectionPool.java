@@ -28,6 +28,12 @@ public class BasicConnectionPool  {
     private void checkDriver(){
         //todo#1 driverClassName에 해당하는 class가 존재하는지 check합니다.
         //존재하지 않는다면 RuntimeException 예외처리.
+        Class clazz = null;
+        try {
+            clazz = Class.forName(driverClassName);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Driver not found");
+        }
     }
 
     private void initialize(){
@@ -51,5 +57,49 @@ public class BasicConnectionPool  {
     public void distory() throws SQLException {
         //todo#6 Connection Pool에 등록된 Connection을 close 합니다.
 
+    }
+    private void checkDriver(){
+
+    }
+
+    private void initialize(){
+        for(int i=0; i<maximumPoolSize; i++){
+            try {
+                Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
+                connections.offer(connection);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public Connection getConnection() throws InterruptedException {
+        synchronized (this) {
+            while (connections.isEmpty()) {
+                wait();
+            }
+            return connections.poll();
+        }
+    }
+
+    public void releaseConnection(Connection connection) {
+        synchronized (this) {
+            connections.offer(connection);
+            notifyAll();
+        }
+    }
+
+    public int getUsedConnectionSize(){
+        synchronized (this) {
+            return this.maximumPoolSize - connections.size();
+        }
+    }
+
+    public void distory() throws SQLException {
+        for(Connection connection : connections){
+            if(!connection.isClosed()){
+                connection.close();
+            }
+        }
     }
 }
