@@ -22,6 +22,34 @@ public class Student {
         this.gender = gender;
         this.age = age;
         this.createdAt = createdAt;
-
     }
+
+    public Student(String id, String name, GENDER gender, Integer age) {
+        this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public GENDER getGender() {
+        return this.gender;
+    }
+
+    public Integer getAge() {
+        return this.age;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return this.createdAt;
+    }
+
 }
