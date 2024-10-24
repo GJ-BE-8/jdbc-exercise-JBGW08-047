@@ -18,21 +18,21 @@ public class StatementStudentRepository implements StudentRepository {
 
     @Override
     public int save(Student student){
-        //todo#1 insert student
-        String sql = String.format("instert into jdbc_students(id, name, gender, age) values('%s', '%s', '%s', %d)",
+
+        String sql = String.format("insert into jdbc_students(id,name,gender,age) values('%s','%s','%s',%d)",
                 student.getId(),
                 student.getName(),
                 student.getGender(),
                 student.getAge()
         );
 
-        log.debug("save : {}", sql);
+        log.debug("save:{}",sql);
 
-        try (Connection connection = DbUtils.getConnection();
+        try(Connection connection = DbUtils.getConnection();
             Statement statement = connection.createStatement();
-        ) {
+        ){
             int result = statement.executeUpdate(sql);
-            log.debug("save : {}", result);
+            log.debug("save:{}",result);
             return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
