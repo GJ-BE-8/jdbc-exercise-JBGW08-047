@@ -42,7 +42,7 @@ public class StatementStudentRepository implements StudentRepository {
     @Override
     public Optional<Student> findById(String id){
         //todo#2 student 조회
-        String sql = String.format("select * from jdbc_students where id = '%d'",id);
+        String sql = String.format("select * from jdbc_students where id = '%s'",id);
         log.debug("findById: {}", sql);
 
         try (Connection connection = DbUtils.getConnection();
@@ -91,7 +91,7 @@ public class StatementStudentRepository implements StudentRepository {
     @Override
     public int deleteById(String id){
        //todo#4 student 삭제
-        String sql = String.format("delete form jdbc_students where id = '%s'", id);
+        String sql = String.format("delete from jdbc_students where id = '%s'", id);
         log.debug("delete : {}", sql);
 
         try (Connection connection = DbUtils.getConnection();
