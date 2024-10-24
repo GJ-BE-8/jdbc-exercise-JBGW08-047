@@ -80,7 +80,7 @@ public class StatementStudentRepository implements StudentRepository {
             Statement statement = connection.createStatement();
         ) {
             int result = statement.executeUpdate(sql);
-            log.debug("update : {}", result);
+            log.debug("result : {}", result);
             return result;
 
         } catch (SQLException e) {
@@ -92,7 +92,6 @@ public class StatementStudentRepository implements StudentRepository {
     public int deleteById(String id){
        //todo#4 student 삭제
         String sql = String.format("delete from jdbc_students where id = '%s'", id);
-        log.debug("delete : {}", sql);
 
         try (Connection connection = DbUtils.getConnection();
             Statement statement = connection.createStatement();
