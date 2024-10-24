@@ -91,8 +91,19 @@ public class StatementStudentRepository implements StudentRepository {
     @Override
     public int deleteById(String id){
        //todo#4 student 삭제
+        String sql = String.format("delete form jdbc_students where id = '%s'", id);
+        log.debug("delete : {}", sql);
 
-        return 0;
+        try (Connection connection = DbUtils.getConnection();
+            Statement statement = connection.createStatement();
+        ) {
+            int result = statement.executeUpdate(sql);
+            log.debug("delete : {}", result);
+            return result;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
