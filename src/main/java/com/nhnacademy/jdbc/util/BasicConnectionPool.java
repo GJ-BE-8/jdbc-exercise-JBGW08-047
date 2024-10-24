@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
+
 public class BasicConnectionPool  {
     private final String jdbcUrl;
     private final String username;
@@ -38,31 +40,6 @@ public class BasicConnectionPool  {
 
     private void initialize(){
         //todo#2 maximumPoolSize만큼 Connection 객체를 생성해서 Connection Pool에 등록합니다.
-    }
-
-    public Connection getConnection() throws InterruptedException {
-        //todo#3 Connection Pool에 connection이 존재하면 반환하고 비어있다면 Connection Pool에 Connection이 존재할 때 까지 대기합니다.
-        return null;
-    }
-
-    public void releaseConnection(Connection connection) {
-        //todo#4 작업을 완료한 Connection 객체를 Connection Pool에 반납 합니다.
-    }
-
-    public int getUsedConnectionSize(){
-        //todo#5 현재 사용중인 Connection 객체 수를 반환합니다.
-        return 0;
-    }
-
-    public void distory() throws SQLException {
-        //todo#6 Connection Pool에 등록된 Connection을 close 합니다.
-
-    }
-    private void checkDriver(){
-
-    }
-
-    private void initialize(){
         for(int i=0; i<maximumPoolSize; i++){
             try {
                 Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
@@ -74,6 +51,7 @@ public class BasicConnectionPool  {
     }
 
     public Connection getConnection() throws InterruptedException {
+        //todo#3 Connection Pool에 connection이 존재하면 반환하고 비어있다면 Connection Pool에 Connection이 존재할 때 까지 대기합니다.
         synchronized (this) {
             while (connections.isEmpty()) {
                 wait();
@@ -83,6 +61,7 @@ public class BasicConnectionPool  {
     }
 
     public void releaseConnection(Connection connection) {
+        //todo#4 작업을 완료한 Connection 객체를 Connection Pool에 반납 합니다.
         synchronized (this) {
             connections.offer(connection);
             notifyAll();
@@ -90,16 +69,21 @@ public class BasicConnectionPool  {
     }
 
     public int getUsedConnectionSize(){
+        //todo#5 현재 사용중인 Connection 객체 수를 반환합니다.
         synchronized (this) {
             return this.maximumPoolSize - connections.size();
         }
+
     }
 
     public void distory() throws SQLException {
+        //todo#6 Connection Pool에 등록된 Connection을 close 합니다.
         for(Connection connection : connections){
             if(!connection.isClosed()){
                 connection.close();
             }
         }
+
     }
+
 }
